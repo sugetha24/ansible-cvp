@@ -9,7 +9,7 @@ from ansible_collections.arista.cvp.plugins.module_utils.resources.modules.field
 from ansible_collections.arista.cvp.plugins.module_utils.facts_tools import CvFactsTools
 from ansible_collections.arista.cvp.plugins.module_utils.tools_schema import validate_json_schema
 from ansible_collections.arista.cvp.plugins.module_utils.resources.schemas.v3 import SCHEMA_CV_CONFIGLET, SCHEMA_CV_CONTAINER, SCHEMA_CV_DEVICE
-from tests.lib.helpers import AnsibleModuleMock, setup_custom_logger
+from tests.lib.helpers import setup_custom_logger
 from tests.lib.config import user_token
 from tests.lib.utils import cvp_login, generate_test_ids_dict
 from tests.data.facts_system_cvaas import FACTS_CONTAINERS_TEST, FACT_DEVICE_TEST, FACT_FILTER_TEST
@@ -42,7 +42,7 @@ def CvFactsTools_Manager(request):
 @pytest.mark.parametrize("test_container", FACTS_CONTAINERS_TEST, ids=generate_test_ids_dict)
 @pytest.mark.api
 @pytest.mark.facts
-class TestCvContainerToolsContainers():
+class TestCvContainerToolsContainer():
 
     @pytest.mark.dependency(name='authentication')
     @pytest.mark.skipif(user_token == 'unset_token', reason="Token is not set correctly")
@@ -66,7 +66,7 @@ class TestCvContainerToolsContainers():
 @pytest.mark.usefixtures("CvFactsTools_Manager")
 @pytest.mark.api
 @pytest.mark.facts
-class TestCvContainerToolsContainers():
+class TestCvContainerToolsFactsContainers():
     @pytest.mark.dependency(name='authentication')
     @pytest.mark.skipif(user_token == 'unset_token', reason="Token is not set correctly")
     def test_cv_connection(self):
@@ -84,6 +84,7 @@ class TestCvContainerToolsContainers():
 
 # -------------------
 # Test Devices
+
 
 @pytest.mark.usefixtures("CvFactsTools_Manager")
 @pytest.mark.parametrize("test_device", FACT_DEVICE_TEST, ids=generate_test_ids_dict)
@@ -109,11 +110,11 @@ class TestCvContainerToolsDevices():
         logger.info('Got correct response from Cloudvision')
         logger.debug('Got response from module: {0}'.format(result))
 
+
 @pytest.mark.usefixtures("CvFactsTools_Manager")
 @pytest.mark.api
 @pytest.mark.facts
 class TestCvContainerToolsDevicesFacts():
-
 
     @pytest.mark.dependency(name='authentication')
     @pytest.mark.skipif(user_token == 'unset_token', reason="Token is not set correctly")
@@ -173,7 +174,7 @@ class TestCvContainerToolsDevicesFilter():
 @pytest.mark.usefixtures("CvFactsTools_Manager")
 @pytest.mark.api
 @pytest.mark.facts
-class TestCvContainerToolsConfiglets():
+class TestCvContainerToolsFactsConfiglets():
 
     @pytest.mark.dependency(name='authentication')
     @pytest.mark.skipif(user_token == 'unset_token', reason="Token is not set correctly")
@@ -181,7 +182,6 @@ class TestCvContainerToolsConfiglets():
         requests.packages.urllib3.disable_warnings()
         logger.debug(str("Class is connected to CV"))
         assert True
-
 
     @pytest.mark.dependency(depends=["authentication"], scope='class')
     def test_facts_configlets(self):

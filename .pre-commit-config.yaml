@@ -9,6 +9,15 @@ repos:
       - id: check-added-large-files
       - id: check-merge-conflict
 
+  - repo: https://github.com/pycqa/flake8
+    rev: 4.0.1 # Note ansible-test uses pycodestyle 2.8.0 which is part of this tagged release of flake8
+    hooks:
+      - id: flake8
+        name: Check for Flake8 errors on Python files
+        # ignoring errors and selecting line length as per
+        # https://github.com/ansible/ansible/blob/devel/test/lib/ansible_test/_util/controller/sanity/pep8/current-ignore.txt
+        types: [python]
+
   - repo: https://github.com/pre-commit/mirrors-pylint
     rev: 'v2.5.0'
     hooks:

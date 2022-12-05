@@ -31,7 +31,7 @@ from ansible.parsing.plugin_docs import read_docstring
 from ansible.parsing.yaml.loader import AnsibleLoader
 from ansible.plugins.loader import fragment_loader
 from ansible.module_utils._text import to_bytes
-from ansible.errors import AnsibleError, AnsibleParserError
+from ansible.errors import AnsibleError
 
 try:
     from html import escape as html_escape

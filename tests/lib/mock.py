@@ -5,9 +5,7 @@ from unittest.mock import MagicMock, create_autospec
 import pprint
 import logging
 from cvprac.cvp_client import CvpClient, CvpApi
-from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.arista.cvp.plugins.module_utils.resources.api.fields import Api
-from tests.data import facts_unit
 
 LOGGER = logging.getLogger(__name__)
 
@@ -49,7 +47,9 @@ class MockCVPDatabase:
     # CVP_DATA_CONFIGLETS_MAPPERS_INIT = magickmock_data.MOCKDATA_CONFIGLET_MAPPERS
     # CVP_DATA_CONFIGLET_INIT = magickmock_data.MOCKDATA_CONFIGLETS
 
-    def __init__(self, devices: dict = None, containers: list = None, configlets: list = None, configlets_mappers: dict = None, images: dict = None, image_bundles: dict = None):
+    def __init__(self, devices: dict = None, containers: list = None,
+                 configlets: list = None, configlets_mappers: dict = None,
+                 images: dict = None, image_bundles: dict = None):
         self.devices = devices if devices is not None else {}
         # self.containers = containers if containers is not None else {}
         self.containers = containers if containers is not None else MockCVPDatabase.CVP_DATA_CONTAINERS_INIT.copy()

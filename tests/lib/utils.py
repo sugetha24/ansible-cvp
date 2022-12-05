@@ -5,15 +5,19 @@ from __future__ import (absolute_import, division, print_function)
 import logging
 import sys
 import requests.packages.urllib3
-from cvprac.cvp_client import CvpClient, CvpLoginError, CvpRequestError
 from ansible_collections.arista.cvp.plugins.module_utils.resources.api.fields import Api
+from tests.system.constants_data import (USER_CONTAINERS, CV_CONTAINERS_NAME_ID_LIST,
+                                         CVP_DEVICES, CVP_DEVICES_1, CVP_DEVICES_UNKNOWN,
+                                         CVP_DEVICES_SCHEMA_TEST, CONTAINER_DESTINATION)
 from tests.lib import config
 from tests.lib.helpers import time_log
 from tests.lib.json_data import CONTAINER_IDS
 from tests.data.container_tools_unit import CVP_DEVICES
-from tests.system.constants_data import USER_CONTAINERS, CV_CONTAINERS_NAME_ID_LIST, CVP_DEVICES, CVP_DEVICES_1, CVP_DEVICES_UNKNOWN, CVP_DEVICES_SCHEMA_TEST, CONTAINER_DESTINATION
+from cvprac.cvp_client import CvpClient, CvpLoginError, CvpRequestError
+
 
 MODULE_LOGGER = logging.getLogger(__name__)
+
 
 def cvp_login():
     """Login cvp devices
@@ -130,6 +134,7 @@ def get_cvp_devices_after_move():
     """
     return CVP_DEVICES_1
 
+
 def get_devices_to_move():
     """Returns list of devices to move
 
@@ -142,6 +147,7 @@ def get_devices_to_move():
             entry[Api.generic.PARENT_CONTAINER_NAME] = CONTAINER_DESTINATION
         to_move.append(entry)
     return to_move
+
 
 def generate_container_ids():
     """Returns the container ids

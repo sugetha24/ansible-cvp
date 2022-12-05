@@ -1,0 +1,13 @@
+[flake8]
+ignore = E402,W503,W504,E741
+
+# Required for compatibility with Black
+extend-ignore = E203
+
+max-line-length = 160
+
+per-file-ignores =
+    ansible_collections/arista/cvp/plugins/modules/cv_device.py:F841
+    tests/lib/utils.py:F811
+    tests/data/image_unit.py:E501
+    ansible_collections/arista/cvp/docs/_build/ansible2rst.py:F811, F841
