@@ -285,8 +285,6 @@ jobs:
         with:
           python-version: |
             3.10
-            # 3.11
-            # 3.12
       - name: 'Install Python & Ansible requirements'
         run: |
           pip install -r ansible_collections/arista/cvp/requirements.txt -r ansible_collections/arista/cvp/requirements-dev.txt --upgrade
