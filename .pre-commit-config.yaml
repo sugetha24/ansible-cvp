@@ -83,14 +83,6 @@ repos:
       types: [file, yaml]
       args: [-c=.github/yamllintrc]
 
-  - repo: https://github.com/ansible/ansible-lint.git
-    rev: v4.2.0
-    hooks:
-      - id: ansible-lint
-        name: Check for ansible-lint errors
-        files: \.(yaml|yml)$
-        exclude: ansible_collections/arista/cvp/docs
-
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.41.0
     hooks:
