@@ -39,7 +39,10 @@ tags: ['arista', 'network', 'networking', 'cloudvision', 'cvp']
 # collection label 'namespace.name'. The value is a version range
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
-dependencies: {}
+dependencies:
+    "arista.eos": ">=7.0.0"
+    "ansible.netcommon": ">=6.0.0"
+    "community.general": ">=8.4.0"
 
 # The URL of the originating SCM repository
 repository: https://github.com/aristanetworks/ansible-cvp
