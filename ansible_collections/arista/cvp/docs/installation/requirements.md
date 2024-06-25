@@ -30,7 +30,7 @@
 
 ## Supported Ansible Versions
 
-- ansible-core from **2.14.0** to **2.16.x**
+- ansible-core from **2.15.0** to **2.17.x**
 
 ## Additional Python Libraries required
 
