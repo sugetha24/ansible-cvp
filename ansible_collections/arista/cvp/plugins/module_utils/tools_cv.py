@@ -39,7 +39,6 @@ def cv_connect(module):
         Instanciated CvpClient with connection information.
     """
     if not HAS_CVPRAC:
-        LOGGER.error('Cannot import cvprac: %s', str(CVPRAC_IMP_ERR))
         module.fail_json(msg=str('cvprac required for this module. Please install using pip install cvprac'))
     client = CvpClient()
     LOGGER.info('Connecting to CVP')
