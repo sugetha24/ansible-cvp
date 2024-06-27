@@ -1,7 +1,7 @@
 # Copyright (c) 2023-2024 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
-# pylint: disable=E0606
+# pylint: disable=unknown-option-value
 
 from tests.data.device_tools_unit import (image_bundle, device_data)
 from tests.data.validate_tools_unit import (validate_router_bgp, return_validate_config_for_device,
