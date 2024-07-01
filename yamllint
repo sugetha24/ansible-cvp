@@ -23,8 +23,5 @@ rules:
   indentation:
     level: warning
     indent-sequences: consistent
-  line-length:
-    max: 350
-    level: warning
-    allow-non-breakable-inline-mappings: true
+  line-length: disable
   truthy: disable
