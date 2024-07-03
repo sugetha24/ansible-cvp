@@ -58,13 +58,13 @@ EXAMPLES = r'''
 ---
 - name: CVP Image Tests
   hosts: cv_server
-  gather_facts: no
+  gather_facts: false
   vars:
   tasks:
     - name: "Gather CVP image information facts {{inventory_hostname}}"
       arista.cvp.cv_image_v3:
-         mode: image
-         action: get
+        mode: image
+        action: get
       register: image_data
 
     - name: "Print out facts from {{inventory_hostname}}"
@@ -92,8 +92,8 @@ EXAMPLES = r'''
         action: add
         bundle_name: Test_bundle
         image_list:
-           - TerminAttr-1.16.4-1.swix
-           - EOS-4.25.4M.swi
+          - TerminAttr-1.16.4-1.swix
+          - EOS-4.25.4M.swi
 '''
 
 # Required by Ansible and CVP

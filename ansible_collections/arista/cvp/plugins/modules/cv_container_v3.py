@@ -57,39 +57,39 @@ EXAMPLES = r'''
 - name: Create container topology on CVP
   hosts: cvp
   connection: local
-  gather_facts: no
+  gather_facts: false
   vars:
-    verbose: False
+    verbose: false
     CVP_CONTAINERS:
-        Fabric:
-            parentContainerName: Tenant
-        Spines:
-            parentContainerName: Fabric
-            configlets:
-                - container_configlet
+      Fabric:
+        parentContainerName: Tenant
+      Spines:
+        parentContainerName: Fabric
+        configlets:
+          - container_configlet
   tasks:
-    - name: 'running cv_container'
+    - name: 'Running cv_container'
       arista.cvp.cv_container_v3:
-        topology: "{{CVP_CONTAINERS}}"
+        topology: "{{ CVP_CONTAINERS }}"
 
 # task in strict mode
 - name: Create container topology on CVP
   hosts: cvp
   connection: local
-  gather_facts: no
+  gather_facts: false
   vars:
-    verbose: False
+    verbose: false
     CVP_CONTAINERS:
-        Fabric:
-            parentContainerName: Tenant
-        Spines:
-            parentContainerName: Fabric
-            configlets:
-                - container_configlet
+      Fabric:
+        parentContainerName: Tenant
+      Spines:
+        parentContainerName: Fabric
+        configlets:
+          - container_configlet
   tasks:
-    - name: 'running cv_container'
+    - name: 'Running cv_container'
       arista.cvp.cv_container_v3:
-        topology: "{{CVP_CONTAINERS}}"
+        topology: "{{ CVP_CONTAINERS }}"
         apply_mode: strict
 '''
 

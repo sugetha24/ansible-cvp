@@ -6,17 +6,17 @@
 
   vars:
 
-    DEVICE1: "s1-leaf1"
+    DEVICE1: s1-leaf1
 
-    DEVICE2: "s1-leaf2"
+    DEVICE2: s1-leaf2
 
     CVP_DEVICES_MOVE_DEVICE_EXECUTE:
       - fqdn: "{{ DEVICE1 }}"
-        parentContainerName: "Temp_Leafs"
+        parentContainerName: Temp_Leafs
 
     CVP_DEVICES_MOVE_DEVICE_CANCEL:
       - fqdn: "{{ DEVICE2 }}"
-        parentContainerName: "Temp_Leafs"
+        parentContainerName: Temp_Leafs
 
     CVP_DEVICES_MOVE_ORIGINAL_LOCATION:
       - fqdn: "{{ DEVICE1 }}"
@@ -52,13 +52,13 @@
     # Running move_device to create task list
     - name: Run CV_DEVICE_V3 To Move Device For Execute Task
       arista.cvp.cv_device_v3:
-        devices: '{{ CVP_DEVICES_MOVE_DEVICE_EXECUTE }}'
+        devices: "{{ CVP_DEVICES_MOVE_DEVICE_EXECUTE }}"
         state: present
       register: MOVE_DEVICE_DATA_EXECUTE
 
-    - name: "Print"
-      debug:
-        msg: "{{MOVE_DEVICE_DATA_EXECUTE}}"
+    - name: Print
+      ansible.builtin.debug:
+        msg: "{{ MOVE_DEVICE_DATA_EXECUTE }}"
 
     - name: Execute Task
       arista.cvp.cv_task_v3:
@@ -89,7 +89,7 @@
 
     - name: Run CV_DEVICE_V3 To Move Device For Cancel Task
       arista.cvp.cv_device_v3:
-        devices: '{{ CVP_DEVICES_MOVE_DEVICE_CANCEL }}'
+        devices: "{{ CVP_DEVICES_MOVE_DEVICE_CANCEL }}"
         state: present
       register: MOVE_DEVICE_DATA_CANCEL
 
@@ -112,7 +112,8 @@
 
     - name: Testing Cancel Task
       vars:
-        CV_FACTS_ORDER_STATUS_CANCEL: "{{ CV_FACTS_V3_RESULT_CANCEL['data']['cvp_tasks'][MOVE_DEVICE_DATA_CANCEL.devices_moved.taskIds[0]]['workOrderUserDefinedStatus'] }}"
+        CV_FACTS_ORDER_STATUS_CANCEL: "{{ CV_FACTS_V3_RESULT_CANCEL['data']['cvp_tasks'][MOVE_DEVICE_DATA_CANCEL.devices_moved.taskIds[0]]['workOrderUserDefinedStatus']
+          }}"
       ansible.builtin.assert:
         that:
           - CANCEL_TASK_DATA.actions_manager.changed == true
@@ -123,7 +124,7 @@
     # Running move_device to create task list
     - name: Move devices back to their original location
       arista.cvp.cv_device_v3:
-        devices: '{{ CVP_DEVICES_MOVE_ORIGINAL_LOCATION }}'
+        devices: "{{ CVP_DEVICES_MOVE_ORIGINAL_LOCATION }}"
         state: present
       register: MOVE_DEVICE_OG_LOC
 

@@ -49,7 +49,7 @@ EXAMPLES = r'''
 ---
 - name: CVP Change Control Tests
   hosts: cv_server
-  gather_facts: no
+  gather_facts: false
   vars:
     ansible_command_timeout: 1200
     ansible_connect_timeout: 600
@@ -135,7 +135,6 @@ EXAMPLES = r'''
       arista.cvp.cv_change_control_v3:
         state: execute
         change_id: ["{{ cv_change_control.data.id }}"]
-
 '''
 
 # Required by Ansible and CVP

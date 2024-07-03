@@ -53,7 +53,7 @@ EXAMPLES = r'''
 - name: Test cv_configlet_v3
   hosts: cvp
   connection: local
-  gather_facts: no
+  gather_facts: false
   vars:
     configlet_list:
       Test_Configlet: "! This is a Very First Testing Configlet\n!"
