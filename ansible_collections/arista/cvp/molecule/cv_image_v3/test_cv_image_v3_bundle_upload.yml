@@ -15,7 +15,7 @@
     delete_bundle_query: "[?name!='{{bundle_name}}']"
 
   tasks:
-    #Upload image and extension
+    # Upload image and extension
     - name: Upload EOS image to {{ inventory_hostname }}
       arista.cvp.cv_image_v3:
         mode: image
@@ -34,7 +34,7 @@
         action: add
         image: "{{ extension_name_2 }}"
 
-    #Create bundle
+    # Create bundle
     - name: Create bundle {{ inventory_hostname }}
       arista.cvp.cv_image_v3:
         mode: bundle
