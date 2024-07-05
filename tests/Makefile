@@ -9,4 +9,4 @@ PYTEST_LOGGING ?= DEBUG
 
 .PHONY: test
 test:  ## Run Pytest in verbose mode with CLI report only for all tests. By default only unit and system, but can be changed by declaring  TEST_PATH variable and its value
-	export PYTEST_LOG_LEVEL=$(PYTEST_LOGGING) && pytest $(TEST_OPT) $(REPORT) $(COVERAGE) --log-cli-level=$(CLI_LOGGING) -m '$(TAG)' $(TESTS)
+	export PYTEST_LOG_LEVEL=$(PYTEST_LOGGING) && pytest ./unit $(TEST_OPT) $(REPORT) $(COVERAGE) --log-cli-level=$(CLI_LOGGING) -m '$(TAG)' $(TESTS)
