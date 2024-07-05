@@ -3,5 +3,5 @@
 # that can be found in the LICENSE file.
 ---
 # Manual action selection
-- name: 'load tasks for {{action}}'
-  include_tasks: "{{action}}.yml"
+- name: 'Load tasks for {{ action }}'
+  ansible.builtin.include_tasks: "{{ action }}.yml"

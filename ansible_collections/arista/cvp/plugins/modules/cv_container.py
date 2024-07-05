@@ -82,15 +82,15 @@ EXAMPLES = r'''
             devices:
                 - veos01
   tasks:
-    - name: "Gather CVP facts {{inventory_hostname}}"
+    - name: "Gather CVP facts {{ inventory_hostname }}"
       cv_facts:
       register: cvp_facts
-    - name: "Build Container topology on {{inventory_hostname}}"
+    - name: "Build Container topology on {{ inventory_hostname }}"
       cv_container:
-        cvp_facts: "{{cvp_facts.ansible_facts}}"
-        topology: "{{containers}}"
+        cvp_facts: "{{ cvp_facts.ansible_facts }}"
+        topology: "{{ containers }}"
         mode: merge
-      register: CVP_CONTAINERS_RESULT
+      register: cvp_containers_result
 '''
 
 import sys
