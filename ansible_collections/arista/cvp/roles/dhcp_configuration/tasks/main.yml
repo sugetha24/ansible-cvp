@@ -7,4 +7,4 @@
 # If mode=offline generate dhcpd.conf to {{output_dir}}
 - name: Start creation/update process.
   tags: [provision]
-  include_tasks: "./{{ mode }}.yml"
+  ansible.builtin.include_tasks: "./{{ mode }}.yml"
