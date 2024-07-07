@@ -106,7 +106,7 @@ EXAMPLES = r'''
         cvp_facts: "{{cvp_facts.ansible_facts}}"
         configlets: "{{configlet_list}}"
         configlets_notes: "Configlet managed by Ansible"
-        configlet_filter: ["New", "Test","base-chk","base-firewall"]
+        configlet_filter: ["New", "Test", "base-chk", "base-firewall"]
       register: cvp_configlet
 '''
 
