@@ -93,7 +93,7 @@
     #        state: factory_reset
     #      register: FACTORY_RESET_RESULT
     #
-    #    # it does falset move device to undefined container, just creates a task on CVP
+    #    # it does not move device to undefined container, just creates a task on CVP
     #
     #    - name: Check State Factory reset
     #      ansible.builtin.assert:
