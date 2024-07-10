@@ -138,7 +138,7 @@ jobs:
       - name: 'Execute pytest validation'
         run: |
           cd tests/
-          make test
+          make unit-tests
       - uses: actions/upload-artifact@v2
         with:
           name: pytest-report
