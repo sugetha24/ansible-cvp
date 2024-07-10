@@ -44,6 +44,10 @@ jobs:
               - 'ansible_collections/arista/cvp/plugins/module_utils/container_tools.py'
               - 'ansible_collections/arista/cvp/plugins/module_utils/device_tools.py'
               - 'ansible_collections/arista/cvp/plugins/module_utils/task_tools.py'
+              - 'ansible_collections/arista/cvp/plugins/module_utils/fact_tools.py'
+              - 'ansible_collections/arista/cvp/plugins/module_utils/image_tools.py'
+              - 'ansible_collections/arista/cvp/plugins/module_utils/tag_tools.py'
+              - 'ansible_collections/arista/cvp/plugins/module_utils/validate_tools.py'
               - 'ansible_collections/arista/cvp/plugins/module_utils/response.py'
               - 'ansible_collections/arista/cvp/plugins/module_utils/generic_tools.py'
               - 'ansible_collections/arista/cvp/plugins/module_utils/schema_v3.py'
@@ -62,6 +66,12 @@ jobs:
               - '.github/workflows/*'
             python:
               - 'ansible_collections/arista/cvp/plugins/**/*.py'
+              - '.github/workflows/*'
+            requirements:
+              - 'development/requirements-dev.txt'
+              - 'development/requirements.txt'
+              - 'ansible_collections/arista/cvp/requirements-dev.txt'
+              - 'ansible_collections/arista/cvp/requirements.txt'
               - '.github/workflows/*'
 
   pre_commit:
@@ -116,7 +126,7 @@ jobs:
     name: Validate code V3 with Pytest
     runs-on: ubuntu-latest
     needs: [python_version_support]
-    if: needs.file-changes.outputs.code_v3 == 'true'
+    if: needs.file-changes.outputs.code_v3 == 'true' || needs.file-changes.outputs.requirements == 'true'
     strategy:
       fail-fast: true
       matrix:
