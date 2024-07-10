@@ -191,9 +191,7 @@ class CvValidationTools(object):
                     MODULE_LOGGER.debug(
                         "queryParams are deviceMac: %s and configuration: %s", str(
                             system_mac), str(config))
-                    resp = self.__cv_client.api.validate_config_for_device(
-                        device_mac=system_mac,
-                        config=config)
+                    resp = self.__cv_client.api.validate_config_for_device(system_mac, config)
                     result_data.add_entry(
                         configlet_name + "_validated_against_" + device_info['device_name']
                     )
