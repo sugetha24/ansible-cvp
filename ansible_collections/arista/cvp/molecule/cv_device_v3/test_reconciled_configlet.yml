@@ -32,7 +32,12 @@
     test_reconcile_misorder:
       - fqdn: "{{device_name}}"
         parentContainerName: "{{cv_facts_v3_result.data.cvp_devices[0].parentContainerName}}"
-        configlets: "{{cv_facts_v3_result.data.cvp_devices[0].configlets + ['configlet1', 'RECONCILE_' + device_name, 'configlet2']}}"
+        configlets:
+          - ATD-INFRA
+          - BASE_s1-leaf1
+          - RECONCILE_s1-leaf1
+          - configlet1
+          - configlet2
 
   tasks:
     - name: Collect devices facts from {{ inventory_hostname }}
@@ -71,7 +76,7 @@
       register: CV_DEVICE_V3_RESULT
 
     - name: Run Python script to reconcile the device
-      ansible.builtin.command: python3 molecule/cv_device_v3/reconcile.py
+      ansible.builtin.command: python3 reconcile.py
 
     - name: Execute Task for detach configlet
       arista.cvp.cv_task_v3:
@@ -87,6 +92,10 @@
         devices: '{{ test_reconcile_misorder }}'
         state: present
       register: reconciled_misorder_result
+
+    - name: Print
+      ansible.builtin.debug:
+        msg: "{{ reconciled_misorder_result }}"
 
     - name: Checking that no task was generated
       ansible.builtin.assert:
