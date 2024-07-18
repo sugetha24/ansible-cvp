@@ -9,7 +9,7 @@ requests.packages.urllib3.disable_warnings()
 
 # Setting variables
 RECONCILE = 'RECONCILE_'  # Prefix for the configlet name
-fixture_file = 'fixtures/cv_device_v3.yaml'
+fixture_file = 'molecule/fixtures/cv_device_v3.yaml'
 
 with open(fixture_file, encoding="utf-8") as f:
     dut = yaml.safe_load(f)
