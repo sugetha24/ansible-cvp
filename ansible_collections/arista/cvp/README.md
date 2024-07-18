@@ -25,7 +25,32 @@ For a full breakdown of the requirements, please see the official `arista.cvp` [
 
 ## Installations
 
-Before using this collection, you need to install it with the Ansible Galaxy command-line tool:
+| ansible-cvp | 1.0.0 | 1.1.0 | >= 2.0.0 |>= 3.9.0 |
+| ----------- | ----- | ----- | -------- | -------- |
+| 2018.2 | ✅ | ✅ | ✅ | |
+| 2019.x | ✅ | ✅ | ✅ | |
+| 2020.1 | | ✅ | ✅ | |
+| >= 2020.2 | | | ✅ | |
+| >= 2021.3 | | | | ✅ |
+
+### Python
+
+- Python `>=3.9`
+
+Please check the minimum version supported by your ansible installation on the [ansible website](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#control-node-requirements).
+
+### Additional Python Libraries required
+
+**Ansible version:**
+
+- ansible-core>=2.15.0,<2.17.0
+
+**3rd party Python libraries:**
+
+- [cvprac](https://github.com/aristanetworks/cvprac)
+- requests
+- jsonschema
+- treelib (for modules in version 1)
 
 ```shell
 ansible-galaxy collection install arista.cvp

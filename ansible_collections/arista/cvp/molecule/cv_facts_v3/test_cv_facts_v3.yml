@@ -232,7 +232,7 @@
       arista.cvp.cv_facts_v3:
         facts:
           - tasks
-        regexp_filter: "{{ MOVE_DEVICE_RESULT.devices_deployed.taskIds[0] }}" # filtered by task id
+        regexp_filter: "{{ MOVE_DEVICE_RESULT.taskIds[0] }}" # filtered by task id
       register: CV_FACTS_V3_RESULT
 
     - name: Check cv_facts_v3 result
@@ -253,7 +253,7 @@
 
     - name: Cancel Pending Tasks
       arista.cvp.cv_task_v3:
-        tasks: "{{ MOVE_DEVICE_RESULT.devices_deployed.taskIds[0] }}"
+        tasks: "{{ MOVE_DEVICE_RESULT.taskIds[0] }}"
         state: cancelled
 
     # Running move_device to empty the container
@@ -270,5 +270,5 @@
 
     - name: Cancel Pending Tasks
       arista.cvp.cv_task_v3:
-        tasks: "{{ MOVE_DEVICE_RESULT.devices_deployed.taskIds[0] }}"
+        tasks: "{{ MOVE_DEVICE_RESULT.taskIds[0] }}"
         state: cancelled

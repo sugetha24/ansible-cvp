@@ -59,8 +59,8 @@
       ansible.builtin.assert:
         that:
           - cv_show_cc_by_name.changed == false
-          - show_cc_by_name.value.change.name == "{{ change.name }}"
-          - show_cc_by_name.value.change.notes == "{{ change.notes }}"
+          - show_cc_by_name.value.change.name == change.name
+          - show_cc_by_name.value.change.notes == change.notes
           - show_cc_by_name.value.change.stages.values != {}
 
     - name: Show an unknown change control on {{ inventory_hostname }} using CC name
