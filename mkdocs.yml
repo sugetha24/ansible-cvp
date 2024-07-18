@@ -114,7 +114,7 @@ markdown_extensions:
 # TOC
 docs_dir: ansible_collections/arista/cvp/
 nav:
-  - Home: README.md
+  - Home: index.md
   - Getting Started: docs/getting-started.md
   - Installation:
     - Collection Installation: docs/installation/collection-installation.md

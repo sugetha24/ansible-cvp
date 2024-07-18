@@ -46,7 +46,7 @@ In a shell, run the following commands after installing the collection from ansi
 
 ```shell
 export ARISTA_CVP_DIR=$(ansible-galaxy collection list arista.cvp --format yaml | head -1 | cut -d: -f1)
-pip3 install -r ${ARISTA_CVP_DIR}/arista/avd/requirements.txt
+pip3 install -r ${ARISTA_CVP_DIR}/arista/cvp/requirements.txt
 ```
 
 If the collection is cloned from GitHub, the requirements file can be referenced directly:
