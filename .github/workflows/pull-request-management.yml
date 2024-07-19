@@ -88,7 +88,7 @@ jobs:
       - name: Set up Python 3
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
       - name: Install requirements
         run: |
           pip install -r ansible_collections/arista/cvp/requirements-dev.txt --upgrade
@@ -130,7 +130,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python_version: ['3.9','3.10','3.11']
+        python_version: ['3.9','3.10','3.11','3.12']
     steps:
       - name: 'set environment variables'
         run: |
@@ -142,8 +142,9 @@ jobs:
         with:
           python-version: ${{ matrix.python_version }}
       - name: Install requirements
+        # Removing ansible-lint in requirement-dev-3.9 to allow requirements installation for Python 3.9.
         run: |
-          pip install -r ansible_collections/arista/cvp/requirements-dev.txt
+          pip install -r ansible_collections/arista/cvp/requirements-dev-pytest.txt
           pip install -r ansible_collections/arista/cvp/requirements.txt
       - name: 'Execute pytest validation'
         run: |
@@ -265,7 +266,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python_version: ['3.9']
+        python_version: ['3.10']
     steps:
       - name: 'set environment variables'
         run: |

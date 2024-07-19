@@ -1,6 +1,6 @@
+# Temp requirements  for pytest testing. Required ansible-lint version as it's not compatible with Python 3.9, so it is removed.
 ansible-core>=2.15.0,<2.18.0
 ansible-builder
-ansible-lint>=24.7.0
 galaxy-importer>=0.3.1
 pycodestyle
 flake8
