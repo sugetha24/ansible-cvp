@@ -301,7 +301,6 @@ jobs:
       - name: 'Install Python & Ansible requirements'
         run: |
           pip install -r ansible_collections/arista/cvp/requirements.txt -r ansible_collections/arista/cvp/requirements-dev.txt --upgrade
-          ansible-galaxy collection install -r ansible_collections/arista/cvp/collections.yml
       - name: 'Run ansible-test integration test cases'
         run: |
           cd ansible_collections/arista/cvp/
