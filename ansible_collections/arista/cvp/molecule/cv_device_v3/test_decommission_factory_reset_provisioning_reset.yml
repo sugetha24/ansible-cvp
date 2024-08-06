@@ -11,12 +11,20 @@
     DEVICE_NAME: s1-leaf2
     DEVICE_NO_STREAMING: s1-leaf4
 
+    DEVICE_ABSENT_BY_SERIAL:
+      NAME: s1-leaf3
+      SERIAL: s1-leaf3
+
     CVP_DEVICES_STATE_ABSENT:
       - fqdn: "{{DEVICE_NAME}}"
         parentContainerName: ""
 
     CVP_DEVICES_STATE_NO_STREAMING:
       - fqdn: "{{DEVICE_NO_STREAMING}}"
+        parentContainerName: ""
+
+    CVP_DEVICES_STATE_ABSENT_BY_SERIAL:
+      - serialNumber: "{{ DEVICE_ABSENT_BY_SERIAL.SERIAL }}"
         parentContainerName: ""
 
     CVP_DEVICES_FACT0RY_RESET:
@@ -37,6 +45,11 @@
         parentContainerName: "{{CV_FACTS_V3_RESULT.data.cvp_devices[0].parentContainerName}}"
         configlets: "{{CV_FACTS_V3_RESULT.data.cvp_devices[0].configlets}}"
 
+    CVP_DEVICES_STATE_ABSENT_BY_SERIAL_DEPLOY:
+      - serialNumber: "{{ DEVICE_ABSENT_BY_SERIAL.SERIAL }}"
+        parentContainerName: "{{CV_FACTS_V3_RESULT_DEVICE_ABSENT_BY_SERIAL.data.cvp_devices[0].parentContainerName}}"
+        configlets: "{{CV_FACTS_V3_RESULT_DEVICE_ABSENT_BY_SERIAL.data.cvp_devices[0].configlets}}"
+
     CVP_DEVICES_NO_STREAMING_DEPLOY:
       - fqdn: "{{ DEVICE_NO_STREAMING }}"
         parentContainerName: "{{CV_FACTS_V3_NO_STREAMING_RESULT.data.cvp_devices[0].parentContainerName}}"
@@ -52,6 +65,13 @@
           - devices
         regexp_filter: "{{ DEVICE_NAME }}"
       register: CV_FACTS_V3_RESULT
+
+    - name: Collect devices facts for {{ DEVICE_ABSENT_BY_SERIAL.NAME }} from {{ inventory_hostname }}
+      arista.cvp.cv_facts_v3:
+        facts:
+          - devices
+        regexp_filter: "{{ DEVICE_ABSENT_BY_SERIAL.NAME }}"
+      register: CV_FACTS_V3_RESULT_DEVICE_ABSENT_BY_SERIAL
 
     - name: Collect devices facts from {{ inventory_hostname }}
       arista.cvp.cv_facts_v3:
@@ -392,5 +412,129 @@
           - CV_DEVICE_V3_RESULT.devices_deployed.changed == true
           - CV_DEVICE_V3_RESULT.devices_deployed.devices_deployed_count == 1
           - CV_DEVICE_V3_RESULT.devices_deployed.devices_deployed_list == ["s1-leaf4_deployed"]
+          - CV_DEVICE_V3_RESULT.devices_deployed.success == true
+          - CV_DEVICE_V3_RESULT.devices_deployed.taskIds != []
+
+
+    ######################################################
+    ##  STATE ABSENT (DECOMMISSION) BY SERIALNUMBER     ##
+    ######################################################
+
+    - name: Run CV_DEVICE_V3 With State Absent by serialNumber for {{ DEVICE_ABSENT_BY_SERIAL.NAME }}
+      arista.cvp.cv_device_v3:
+        devices: "{{ CVP_DEVICES_STATE_ABSENT_BY_SERIAL }}"
+        state: absent
+        search_key: serialNumber
+      register: DECOMMISSION_DEVICE_BY_SERIAL
+
+    - name: Assert DECOMMISSION_DEVICE_BY_SERIAL for {{ DEVICE_ABSENT_BY_SERIAL.NAME }}
+      ansible.builtin.assert:
+        that:
+          - DECOMMISSION_DEVICE_BY_SERIAL.devices_decommissioned.changed == true
+          - DECOMMISSION_DEVICE_BY_SERIAL.devices_decommissioned.devices_decommissioned_count == 1
+          - DECOMMISSION_DEVICE_BY_SERIAL.devices_decommissioned.devices_decommissioned_list == ['{{ DEVICE_ABSENT_BY_SERIAL.NAME }}_delete']
+          - DECOMMISSION_DEVICE_BY_SERIAL.devices_decommissioned.success == true
+          - DECOMMISSION_DEVICE_BY_SERIAL.devices_decommissioned.taskIds == []
+          - DECOMMISSION_DEVICE_BY_SERIAL.failed == false
+
+    - name: Run CV_DEVICE_V3 With State Absent by serialNumber for {{ DEVICE_ABSENT_BY_SERIAL.NAME }} when device does not exist in CVP
+      arista.cvp.cv_device_v3:
+        devices: "{{ CVP_DEVICES_STATE_ABSENT_BY_SERIAL }}"
+        state: absent
+        search_key: serialNumber
+      ignore_errors: true
+      register: DECOMMISSION_DEVICE_BY_SERIAL_ABSENT
+
+    - name: Assert DECOMMISSION_DEVICE_BY_SERIAL_ABSENT for {{ DEVICE_ABSENT_BY_SERIAL.NAME }}
+      ansible.builtin.assert:
+        that:
+          - DECOMMISSION_DEVICE_BY_SERIAL_ABSENT.changed == false
+          - DECOMMISSION_DEVICE_BY_SERIAL_ABSENT.failed == true
+          - DECOMMISSION_DEVICE_BY_SERIAL_ABSENT.msg == "Error - the following devices do not exist in CVP ['{{ DEVICE_ABSENT_BY_SERIAL.NAME }}'] but are defined in the playbook.                 Make
+            sure that the devices are provisioned and defined with the full fqdn name                 (including the domain name) if needed."
+
+    - name: Generate UUID for onboarding device {{ DEVICE_ABSENT_BY_SERIAL.NAME }}
+      ansible.builtin.set_fact:
+        generated_uuid: "{{ 'requestId' | to_uuid }}"
+
+    - name: Re-onboarding decommissioned by serialNumber device {{ DEVICE_ABSENT_BY_SERIAL.NAME }}
+      ansible.builtin.uri:
+        url: "{{ cvp_device_api }}"
+        method: POST
+        headers:
+          Accept: application/json
+          Cookie: access_token={{ cvp_token.cookies.access_token }}
+        validate_certs: false
+        return_content: true
+        body_format: json
+        body: '{"key":{"requestId":"{{ generated_uuid }}"},"hostnameOrIp":"{{ CV_FACTS_V3_RESULT_DEVICE_ABSENT_BY_SERIAL.data.cvp_devices[0].ipAddress }}","device_type":"eos"}'
+      register: _result
+      until: _result.status == 200
+      retries: 10
+      delay: 2
+
+    - name: Pause for 10 seconds for streaming to start
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: Add target device to inventory
+      add_host:
+        name: "{{ DEVICE_ABSENT_BY_SERIAL.NAME }}"
+        groups: target_device
+        ansible_user: arista
+        ansible_password: "{{ lookup('env', 'LABPASSPHRASE') }}"
+        ansible_connection: httpapi
+        ansible_network_os: eos
+        ansible_httpapi_port: 443
+        ansible_httpapi_use_ssl: True
+        ansible_httpapi_validate_certs: False
+
+    - name: Restart TerminAttr (needed on ATD)
+      run_once: true
+      delegate_to: "{{ DEVICE_ABSENT_BY_SERIAL.NAME }}"
+      arista.eos.eos_command:
+        commands:
+          - enable
+          - configure
+          - daemon TerminAttr
+          - shutdown
+          - no shutdown
+
+    - name: Checking onboarding status for device {{ DEVICE_ABSENT_BY_SERIAL.NAME }}
+      ansible.builtin.uri:
+        url: "{{ onboarding_status_api }}"
+        method: GET
+        headers:
+          Accept: application/json
+          Cookie: access_token={{ cvp_token.cookies.access_token }}
+        validate_certs: false
+        return_content: true
+        body_format: json
+        body: "{}"
+      register: onboarding_status
+      until: onboarding_status.json.value.status == "ONBOARDING_STATUS_SUCCESS"
+      retries: 30
+      delay: 5
+
+    - name: Adding device {{ DEVICE_ABSENT_BY_SERIAL.NAME }} back to the original container
+      arista.cvp.cv_device_v3:
+        devices: "{{ CVP_DEVICES_STATE_ABSENT_BY_SERIAL_DEPLOY }}"
+        state: present
+        search_key: serialNumber
+      register: CV_DEVICE_V3_RESULT
+
+    - name: Execute Add Device task for device {{ DEVICE_ABSENT_BY_SERIAL.NAME }}
+      arista.cvp.cv_task_v3:
+        tasks:
+          - "{{ CV_DEVICE_V3_RESULT.devices_deployed.taskIds[0] }}"
+      when: CV_DEVICE_V3_RESULT.success is true
+
+    - name: Checking if Add Device was successful for {{ DEVICE_ABSENT_BY_SERIAL.NAME }}
+      ansible.builtin.assert:
+        that:
+          - CV_DEVICE_V3_RESULT.changed == true
+          - CV_DEVICE_V3_RESULT.devices_deployed.changed == true
+          - CV_DEVICE_V3_RESULT.devices_deployed.devices_deployed_count == 1
+          - CV_DEVICE_V3_RESULT.devices_deployed.devices_deployed_list == ["{{ DEVICE_ABSENT_BY_SERIAL.NAME }}_deployed"]
           - CV_DEVICE_V3_RESULT.devices_deployed.success == true
           - CV_DEVICE_V3_RESULT.devices_deployed.taskIds != []

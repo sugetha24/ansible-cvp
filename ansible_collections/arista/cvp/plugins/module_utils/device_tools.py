@@ -2325,9 +2325,18 @@ class CvDeviceTools(object):
                 MODULE_LOGGER.info("send reset request for device %s", str(device.info))
                 req_id = str(uuid.uuid4())
                 for cvdev in cvp_inventory:
-                    if cvdev["result"]["value"]["hostname"] == device.hostname:
-                        device_id = cvdev["result"]["value"]["key"]["deviceId"]
-                        break
+                    if self.__search_by == Api.device.HOSTNAME:
+                        if cvdev["result"]["value"]["hostname"] == device.hostname:
+                            device_id = cvdev["result"]["value"]["key"]["deviceId"]
+                            break
+                    elif self.__search_by == Api.device.FQDN:
+                        if cvdev["result"]["value"]["fqdn"] == device.fqdn:
+                            device_id = cvdev["result"]["value"]["key"]["deviceId"]
+                            break
+                    elif self.__search_by == Api.device.SERIAL:
+                        if cvdev["result"]["value"]["key"]["deviceId"] == device.serial_number:
+                            device_id = cvdev["result"]["value"]["key"]["deviceId"]
+                            break
                 MODULE_LOGGER.info("Found device serial number: %s", device_id)
                 if self.__check_mode:
                     result_data.changed = False
