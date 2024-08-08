@@ -3,7 +3,7 @@ scenario:
   test_sequence:
     - converge
 driver:
-  name: delegated
+  name: default
 platforms:
   - name: dummy
     managed: false

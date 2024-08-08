@@ -6,7 +6,7 @@ scenario:
     - converge
     # - verify
 driver:
-  name: delegated
+  name: default
 platforms:
   - name: cv_server
     image: avdteam/base:3.6-v1.0
