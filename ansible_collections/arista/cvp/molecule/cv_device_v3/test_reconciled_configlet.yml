@@ -76,7 +76,7 @@
       register: CV_DEVICE_V3_RESULT
 
     - name: Run Python script to reconcile the device
-      ansible.builtin.command: python3 molecule/cv_device_v3/reconcile.py
+      ansible.builtin.command: python3 reconcile.py
 
     - name: Execute Task for detach configlet
       arista.cvp.cv_task_v3:
