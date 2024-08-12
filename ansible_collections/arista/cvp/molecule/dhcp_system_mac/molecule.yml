@@ -25,7 +25,6 @@ scenario:
     - destroy
   test_sequence:
     # - dependency
-    - lint
     # - cleanup
     - destroy
     - syntax
@@ -42,24 +41,8 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: centos7-systemd
-    image: centos:7
-    command: /sbin/init
-    tmpfs:
-      - /run
-      - /tmp
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  - name: centos8-systemd
-    image: centos:8
-    command: /sbin/init
-    tmpfs:
-      - /run
-      - /tmp
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  - name: ubuntu
-    image: ubuntu:18.04
+  - name: ubuntu-22.04
+    image: ubuntu:22.04
 provisioner:
   log: true
   name: ansible

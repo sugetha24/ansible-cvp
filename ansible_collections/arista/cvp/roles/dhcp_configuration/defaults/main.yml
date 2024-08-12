@@ -1,5 +1,5 @@
 ---
-# defaults file for ztp-setup
+# defaults file for dhcp_configuration
 # Configure default connection parameter.
 ansible_connection: paramiko
 

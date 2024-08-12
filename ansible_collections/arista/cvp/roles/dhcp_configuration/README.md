@@ -4,6 +4,10 @@
   ~ that can be found in the LICENSE file.
   -->
 
+!!! warning
+
+    The dhcp_configuration role has been deprecated and will be removed in version 4.0.0.
+
 # dhcp_configuration role
 
 Ansible role to provision and configure Zero Touch Provisioning on a CloudVision server. Role will do the following:
@@ -23,7 +27,7 @@ Below is a list of platforms where DHCPd configuration has been tested:
 
 - Centos 7 / 8
 - Ubuntu 18.02
-- Arista CloudVision 2019 and onward (for lab purpose)
+- Ubuntu 22.04
 
 This role should work on any platform running [ISC-DHCP server](https://www.isc.org/dhcp/).
 
