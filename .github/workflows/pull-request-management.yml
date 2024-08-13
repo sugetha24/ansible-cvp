@@ -166,7 +166,7 @@ jobs:
       matrix:
         ansible_version:
           - 'ansible-core>=2.15.0,<2.18.0 --upgrade'
-        avd_scenario:
+        cvp_scenario:
           - cv_configlet_loose
           - cv_configlet_strict
           - cv_device
@@ -183,7 +183,7 @@ jobs:
         with:
           molecule_parentdir: 'ansible_collections/arista/cvp'
           molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
+          molecule_args: '--scenario-name ${{ matrix.cvp_scenario }}'
           pip_file: ansible_collections/arista/cvp/requirements.txt
           galaxy_file: "ansible_collections/arista/cvp/collections.yml"
           ansible: "${{ matrix.ansible_version }}"
@@ -191,8 +191,8 @@ jobs:
           check_git_enforced: false
       - uses: actions/upload-artifact@v3
         with:
-          name: molecule-${{ matrix.avd_scenario }}-artifacts
-          path: ansible_collections/arista/cvp/molecule/${{ matrix.avd_scenario }}
+          name: molecule-${{ matrix.cvp_scenario }}-artifacts
+          path: ansible_collections/arista/cvp/molecule/${{ matrix.cvp_scenario }}
 
   molecule_dhcp:
     name: Validate Roles for DHCP management
@@ -200,10 +200,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        # ansible_version: ['ansible-core==2.11.3', 'ansible-core>=2.11.3']
-        # XXX:
-        ansible_version: ['ansible-core==2.15.0', 'ansible-core>=2.17.0']
-        avd_scenario:
+        ansible_version: ['ansible-core==2.15.0', 'ansible-core<2.18.0']
+        cvp_scenario:
           - dhcp_management_mac
           - dhcp_management_offline
           - dhcp_system_mac
@@ -220,7 +218,7 @@ jobs:
         with:
           molecule_parentdir: 'ansible_collections/arista/cvp'
           molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
+          molecule_args: '--scenario-name ${{ matrix.cvp_scenario }}'
           pip_file: ansible_collections/arista/cvp/requirements.txt
           galaxy_file: "ansible_collections/arista/cvp/collections.yml"
           ansible: "${{ matrix.ansible_version }}"
