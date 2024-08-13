@@ -5,6 +5,23 @@ Arista.Cvp Release Notes
 .. contents:: Topics
 
 
+v3.11.0
+=======
+
+Release Summary
+---------------
+
+Release 3.11.0 - See documentation on cvp.avd.sh for details.
+
+
+Bugfixes
+--------
+
+- Allow cv_device_v3 to handle SN-based decomms
+- Cv_validate_v3 broken with cvprac 1.4.0 due to argument keyword change
+- Device decommissioning fails if a device is not streaming and not provisioned
+- Update Readme with correct ansible-core version
+
 v3.10.1
 =======
 

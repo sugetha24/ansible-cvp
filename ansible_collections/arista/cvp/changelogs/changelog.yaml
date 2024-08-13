@@ -20,6 +20,19 @@ releases:
     fragments:
     - v3.10.1.yml
     release_date: '2023-12-06'
+  3.11.0:
+    changes:
+      bugfixes:
+      - Allow cv_device_v3 to handle SN-based decomms
+      - Cv_validate_v3 broken with cvprac 1.4.0 due to argument keyword change
+      - Device decommissioning fails if a device is not streaming and not provisioned
+      - Update Readme with correct ansible-core version
+      release_summary: 'Release 3.11.0 - See documentation on cvp.avd.sh for details.
+
+        '
+    fragments:
+    - v3.11.0.yml
+    release_date: '2024-08-13'
   3.4.0:
     changes:
       bugfixes:
