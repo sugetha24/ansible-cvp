@@ -20,8 +20,8 @@ jobs:
       docs: ${{ steps.filter.outputs.docs }}
       python: ${{ steps.filter.outputs.python }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
@@ -63,6 +63,7 @@ jobs:
               - 'mkdocs.yml'
               - 'ansible_collections/arista/cvp/docs/**'
               - 'ansible_collections/arista/cvp/roles/**/README.md'
+              - 'ansible_collections/arista/cvp/index.md'
               - '.github/workflows/*'
             python:
               - 'ansible_collections/arista/cvp/plugins/**/*.py'
@@ -82,11 +83,11 @@ jobs:
     steps:
       # Removed as gh action is marked as deprecated
       # - uses: pre-commit/action@v2.0.2
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up Python 3
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
       - name: Install requirements
@@ -111,9 +112,9 @@ jobs:
         run: |
           echo "PY_COLORS=1" >> $GITHUB_ENV
           echo "ANSIBLE_FORCE_COLOR=1" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python 3
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python_version }}
       - name: Test code compatibility
@@ -136,9 +137,9 @@ jobs:
         run: |
           echo "PY_COLORS=1" >> $GITHUB_ENV
           echo "ANSIBLE_FORCE_COLOR=1" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python 3
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python_version }}
       - name: Install requirements
@@ -150,7 +151,7 @@ jobs:
         run: |
           cd tests/
           make unit-tests
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: pytest-report
           path: |
@@ -165,7 +166,7 @@ jobs:
       matrix:
         ansible_version:
           - 'ansible-core>=2.15.0,<2.18.0 --upgrade'
-        avd_scenario:
+        cvp_scenario:
           - cv_configlet_loose
           - cv_configlet_strict
           - cv_device
@@ -176,22 +177,22 @@ jobs:
         run: |
           echo "PY_COLORS=1" >> $GITHUB_ENV
           echo "ANSIBLE_FORCE_COLOR=1" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run molecule action
         uses: arista-netdevops-community/action-molecule-avd@v1.8.1
         with:
           molecule_parentdir: 'ansible_collections/arista/cvp'
           molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
+          molecule_args: '--scenario-name ${{ matrix.cvp_scenario }}'
           pip_file: ansible_collections/arista/cvp/requirements.txt
           galaxy_file: "ansible_collections/arista/cvp/collections.yml"
           ansible: "${{ matrix.ansible_version }}"
           check_git: true
           check_git_enforced: false
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
-          name: molecule-${{ matrix.avd_scenario }}-artifacts
-          path: ansible_collections/arista/cvp/molecule/${{ matrix.avd_scenario }}
+          name: molecule-${{ matrix.cvp_scenario }}-artifacts
+          path: ansible_collections/arista/cvp/molecule/${{ matrix.cvp_scenario }}
 
   molecule_dhcp:
     name: Validate Roles for DHCP management
@@ -199,10 +200,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        # ansible_version: ['ansible-core==2.11.3', 'ansible-core>=2.11.3']
-        # XXX:
-        ansible_version: ['ansible-core==2.15.0', 'ansible-core>=2.17.0']
-        avd_scenario:
+        ansible_version: ['ansible-core==2.15.0', 'ansible-core<2.18.0']
+        cvp_scenario:
           - dhcp_management_mac
           - dhcp_management_offline
           - dhcp_system_mac
@@ -213,13 +212,13 @@ jobs:
         run: |
           echo "PY_COLORS=1" >> $GITHUB_ENV
           echo "ANSIBLE_FORCE_COLOR=1" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run molecule action
         uses: arista-netdevops-community/action-molecule-avd@v1.8.1
         with:
           molecule_parentdir: 'ansible_collections/arista/cvp'
           molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
+          molecule_args: '--scenario-name ${{ matrix.cvp_scenario }}'
           pip_file: ansible_collections/arista/cvp/requirements.txt
           galaxy_file: "ansible_collections/arista/cvp/collections.yml"
           ansible: "${{ matrix.ansible_version }}"
@@ -279,9 +278,9 @@ jobs:
         run: |
           echo "PY_COLORS=1" >> $GITHUB_ENV
           echo "ANSIBLE_FORCE_COLOR=1" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python 3
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python_version }}
       - name: 'Install Python requirements'
@@ -312,3 +311,38 @@ jobs:
         run: |
           cd ansible_collections/arista/cvp/
           ansible-lint --force-color --strict -v
+
+  # ----------------------------------- #
+  # Galaxy Importer
+  # ----------------------------------- #
+  galaxy_importer:
+    name: Test galaxy-importer
+    runs-on: ubuntu-20.04 # Older version to be compatible with old python
+    env:
+      PY_COLORS: 1 # allows molecule colors to be passed to GitHub Actions
+      ANSIBLE_FORCE_COLOR: 1 # allows ansible colors to be passed to GitHub Actions
+      GALAXY_IMPORTER_CONFIG: galaxy-importer/galaxy-importer.cfg
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: |
+            3.10
+      - uses: actions/checkout@v4
+      - name: 'Install Python & Ansible requirements'
+        run: |
+          pip install -r ansible_collections/arista/cvp/requirements.txt -r ansible_collections/arista/cvp/requirements-dev.txt --upgrade
+          ansible-galaxy collection install -r ansible_collections/arista/cvp/collections.yml
+      - name: Install galaxy-importer
+        # Install the specific version of galaxy-importer used on galaxy.ansible.com
+        # The version conflicts with our requirements,
+        # so we let the galaxy-importer version resolve remaining requirements.
+        run: |
+          pip install "galaxy-importer==0.4.20"
+      - name: 'Build ansible package'
+        run: make collection-build
+      - name: 'Run galaxy-importer checks'
+        run: python -m galaxy_importer.main *.tar.gz
+      - uses: actions/upload-artifact@v3
+        with:
+          name: importer-logs
+          path: ./importer_result.json
