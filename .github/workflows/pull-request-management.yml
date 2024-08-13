@@ -63,6 +63,7 @@ jobs:
               - 'mkdocs.yml'
               - 'ansible_collections/arista/cvp/docs/**'
               - 'ansible_collections/arista/cvp/roles/**/README.md'
+              - 'ansible_collections/arista/cvp/index.md'
               - '.github/workflows/*'
             python:
               - 'ansible_collections/arista/cvp/plugins/**/*.py'
@@ -150,7 +151,7 @@ jobs:
         run: |
           cd tests/
           make unit-tests
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v3
         with:
           name: pytest-report
           path: |
@@ -188,7 +189,7 @@ jobs:
           ansible: "${{ matrix.ansible_version }}"
           check_git: true
           check_git_enforced: false
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v3
         with:
           name: molecule-${{ matrix.avd_scenario }}-artifacts
           path: ansible_collections/arista/cvp/molecule/${{ matrix.avd_scenario }}
@@ -338,12 +339,12 @@ jobs:
         # The version conflicts with our requirements,
         # so we let the galaxy-importer version resolve remaining requirements.
         run: |
-          pip install "galaxy-importer==0.4.19"
+          pip install "galaxy-importer==0.4.20"
       - name: 'Build ansible package'
         run: make collection-build
       - name: 'Run galaxy-importer checks'
         run: python -m galaxy_importer.main *.tar.gz
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v3
         with:
           name: importer-logs
           path: ./importer_result.json
